@@ -1,0 +1,55 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <title>Autodimensi-STASRG</title>
+  <link rel="stylesheet" type="text/css" href="style.css">
+  <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+  <script>
+    $(document).ready(function() {
+      setInterval(fetchSensorData, 1000); // Fetch data every 1 second
+
+      function fetchSensorData() {
+        $.ajax({
+          url: "http://<arduino_ip_address>/sensor_data", // Replace with your Arduino's IP address
+          type: "GET",
+          dataType: "json",
+          success: function(data) {
+            // Update HTML elements with the received data
+            $("#lidar1-last-distance").text(data.sensor1.lastDistance + "cm");
+            $("#lidar2-last-distance").text(data.sensor2.lastDistance + "cm");
+            $("#lidar2-width").text(data.sensor2.width + "cm");
+            $("#lidar1-initial-distance").text(data.sensor1.initialDistance + "cm");
+            $("#lidar1-height").text(data.sensor1.initialDistance - data.sensor1.lastDistance + "cm");
+            $("#lidar2-initial-distance").text(data.sensor2.initialDistance + "cm");
+            $("#lidar2-length").text(data.sensor2.initialDistance - data.sensor2.lastDistance + "cm");
+            $("#volume").text(data.volume + "cm");
+          },
+          error: function() {
+            console.log("Failed to fetch sensor data");
+          }
+        });
+      }
+    });
+  </script>
+</head>
+<body>
+  <h1>Autoweighing Calibration :</h1>
+  <div>
+    <h2>Sensor Lidar 1</h2>
+    <p>Last Distance: <span id="lidar1-last-distance"></span></p>
+    <p>Initial Distance: <span id="lidar1-initial-distance"></span></p>
+    <p>Height: <span id="lidar1-height"></span></p>
+  </div>
+  <div>
+    <h2>Sensor Lidar 2</h2>
+    <p>Last Distance: <span id="lidar2-last-distance"></span></p>
+    <p>Initial Distance: <span id="lidar2-initial-distance"></span></p>
+    <p>Width: <span id="lidar2-width"></span></p>
+    <p>Length: <span id="lidar2-length"></span></p>
+  </div>
+  <div>
+    <h2>Volume</h2>
+    <p>Volume Item / Cargo Box: <span id="volume"></span></p>
+  </div>
+</body>
+</html>
